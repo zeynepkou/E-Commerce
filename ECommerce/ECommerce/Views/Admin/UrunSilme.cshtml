@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = "Ürün Silme";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    var products = ViewBag.Products as List<ECommerce.Models.Product>;
+    var productNames = products?.Select(p => p.ProductName).ToList() ?? new List<string>();
+
+}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Ürün Listesi</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ürün Adı</th>
+                <th>Kategori</th>
+                <th>Fiyat</th>
+                <th>Stok</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            @if (ViewBag.Products != null && (ViewBag.Products as List<ECommerce.Models.Product>).Any())
+            {
+                foreach (var product in ViewBag.Products as List<ECommerce.Models.Product>)
+                {
+                    <tr id="productRow_@product.ProductID">
+                        <td>@product.ProductID</td>
+                        <td>@product.ProductName</td>
+                        <td>@product.CategoryID</td>
+                        <td>@product.Price</td>
+                        <td>@product.Stock</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-product" data-product-id="@product.ProductID">
+                                Sil
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Hiç ürün bulunamadı.</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <!-- Loglar -->
+    <div class="mt-5">
+        <h4 class="text-dark">Son Loglar</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Zaman</th>
+                    <th>Tip</th>
+                    <th>Mesaj</th>
+                </tr>
+            </thead>
+            <tbody id="logContainer">
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.LogTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@log.LogType</td>
+                        <td>@log.LogMessage</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).on('click', '.delete-product', function () {
+        var productId = $(this).data('product-id'); // Silinecek ürünün ID'si
+        var row = $('#productRow_' + productId); // Silinecek ürünün satırı
+
+        if (confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+            $.ajax({
+                url: '/Admin/UrunSilme', // Silme işlemi için backend URL
+                type: 'POST',
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.success) {
+                        row.remove(); // Başarılı ise satırı kaldır
+                        alert("Ürün başarıyla silindi.");
+                    } else {
+                        alert("Ürün silinirken bir hata oluştu.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Bir hata oluştu: " + error);
+                }
+            });
+        }
+    });
+</script>
+<script>
+
+    // Loglar ve Stok Verisi Güncelleme
+    setInterval(function () {
+        // Logları güncelleme
+        $.ajax({
+            url: '/Admin/GetLogs', // Backend'den logları al
+            type: 'GET',
+            success: function (logs) {
+                let logContainer = $('#logContainer');
+
+                // Mevcut logları temizle
+                logContainer.empty();
+
+                // Yeni logları ekle
+                logs.forEach(log => {
+                    logContainer.append(`
+                        <tr>
+                            <td>${new Date(log.logTime).toLocaleString()}</td>
+                            <td>${log.logType}</td>
+                            <td>${log.logMessage}</td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function () {
+                console.error("Loglar alınırken bir hata oluştu.");
+            }
+        });
+    }, 1000); // 5 saniyede bir logları güncelle
+
+</script>

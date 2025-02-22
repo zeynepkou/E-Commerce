@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Profil Güncelle";
+}
+
+<h1 class="text-center my-4">Profil Güncelle</h1>
+
+<div class="container">
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+            <form asp-action="Guncelle">
+                <div class="mb-3">
+                    <label for="CustomerName" class="form-label fw-bold">Adınız</label>
+                    <input type="text" class="form-control shadow-sm" id="CustomerName" name="CustomerName" value="@Model.CustomerName" required />
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerSurName" class="form-label fw-bold">Soyadınız</label>
+                    <input type="text" class="form-control shadow-sm" id="CustomerSurName" name="CustomerSurName" value="@Model.CustomerSurName" required />
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerLoginName" class="form-label fw-bold">Kullanıcı Adı</label>
+                    <input type="text" class="form-control shadow-sm" id="CustomerLoginName" name="CustomerLoginName" value="@Model.CustomerLoginName" required />
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerPassword" class="form-label fw-bold">Şifre</label>
+                    <input type="password" class="form-control shadow-sm" id="CustomerPassword" name="CustomerPassword" value="@Model.CustomerPassword" required />
+                </div>
+                <div class="mb-3">
+                    <label for="Budget" class="form-label fw-bold">Bütçe</label>
+                    <input type="number" class="form-control shadow-sm" id="Budget" name="Budget" value="@Model.Budget" required />
+                </div>
+                <div class="mb-3">
+                    <label for="CustomerType" class="form-label fw-bold">Müşteri Tipi</label>
+                    <input type="text" class="form-control shadow-sm bg-light" id="CustomerType" value="@Model.CustomerType" disabled />
+                    <small class="form-text text-muted">Müşteri tipi bütçenize göre otomatik olarak hesaplanır.</small>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

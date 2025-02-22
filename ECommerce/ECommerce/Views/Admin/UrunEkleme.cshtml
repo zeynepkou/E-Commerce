@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Ürün Ekle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    var products = ViewBag.Products as List<ECommerce.Models.Product>;
+    var productNames = products?.Select(p => p.ProductName).ToList() ?? new List<string>();
+   
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="container mt-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+    }
+    <h2 class="text-center mb-4">Yeni Ürün Ekle</h2>
+    <form action="/Admin/UrunEkleme" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="productName" class="form-label">Ürün Adı</label>
+            <input type="text" class="form-control" id="productName" name="ProductName" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="productDescription" class="form-label">Ürün Açıklaması</label>
+            <textarea class="form-control" id="productDescription" name="Description" rows="4" required></textarea>
+        </div>
+
+
+
+        <div class="mb-3">
+            <label for="productStock" class="form-label">Stok Miktarı</label>
+            <input type="number" class="form-control" id="productStock" name="Stock" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="productPrice" class="form-label">Fiyat</label>
+            <input type="number" step="0.01" class="form-control" id="productPrice" name="Price" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="parentCategory" class="form-label">Ana Kategori</label>
+            <select class="form-control" id="parentCategory" name="ParentCategory" required>
+                <option value="">Ana Kategori Seçin</option>
+                @foreach (var category in ViewBag.Categories as List<ECommerce.Models.Category>)
+                {
+                    <option value="@category.CategoryID">@category.CategoryName</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="subCategory" class="form-label">Alt Kategori</label>
+            <select class="form-control" id="subCategory" name="CategoryID" required>
+                <option value="">Alt Kategori Seçin</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="productImage" class="form-label">Ürün Fotoğrafı</label>
+            <input type="file" class="form-control" id="productImage" name="ImageUrl" accept="image/*" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Ürün Ekle</button>
+    </form>
+    <!-- Loglar -->
+    <div class="mt-5">
+        <h4 class="text-dark">Son Loglar</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Zaman</th>
+                    <th>Tip</th>
+                    <th>Mesaj</th>
+                </tr>
+            </thead>
+            <tbody id="logContainer">
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.LogTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@log.LogType</td>
+                        <td>@log.LogMessage</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // Ana Kategori Değişiminde Alt Kategorileri Yükleme
+        $('#parentCategory').change(function () {
+            var parentId = $(this).val();
+            console.log("Seçilen Ana Kategori ID: ", parentId); // Ana kategori ID'yi logla
+            if (parentId) {
+                $.ajax({
+                    url: '/Admin/GetSubCategories',
+                    type: 'GET',
+                    data: { parentId: parentId },
+                    success: function (data) {
+                        console.log("Alt Kategori Listesi: ", data); // Gelen alt kategori JSON'u
+                        $('#subCategory').empty().append('<option value="">Alt Kategori Seçin</option>');
+                        $.each(data, function (index, item) {
+                            $('#subCategory').append('<option value="' + item.categoryID + '">' + item.categoryName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.error("Alt kategoriler yüklenirken hata oluştu!");
+                    }
+                });
+            } else {
+                $('#subCategory').empty().append('<option value="">Alt Kategori Seçin</option>');
+            }
+        });
+
+        // Alt Kategori Değişiminde Seçilen Kategori ID'sini Konsola Yazdır
+        $('#subCategory').change(function () {
+            var subCategoryId = $(this).val();
+            console.log("Seçilen Alt Kategori ID: ", subCategoryId);
+        });
+
+        // Form Gönderimi Sırasında Verileri Logla
+        $('form').submit(function (e) {
+            e.preventDefault(); // Formun varsayılan gönderimini durdur
+            var formData = new FormData(this); // Form verilerini al
+
+            console.log("Gönderilen Form Verisi:");
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ": " + pair[1]);
+            }
+            this.submit(); // Formu normal şekilde gönder
+        });
+    });
+
+
+
+        $('form').submit(function (e) {
+        e.preventDefault(); // Formun varsayılan gönderimini durdur
+        var formData = new FormData(this); // Form verilerini al
+
+        console.log("Gönderilen Form Verisi:");
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ": " + pair[1]); // Form verilerini logla
+        }
+        this.submit(); // Formu normal şekilde gönder
+    });
+
+</script>
+<script>
+
+    // Loglar ve Stok Verisi Güncelleme
+    setInterval(function () {
+        // Loglar
+        $.ajax({
+            url: '/Admin/GetLogs',
+            type: 'GET',
+            success: function (logs) {
+                let logContainer = $('#logContainer');
+                logContainer.empty();
+                logs.forEach(log => {
+                    logContainer.append(`
+                                 <tr>
+                                     <td>${log.logTime}</td>
+                                     <td>${log.logType}</td>
+                                     <td>${log.logMessage}</td>
+                                 </tr>
+                             `);
+                });
+            },
+            error: function () {
+                console.error("Loglar alınırken bir hata oluştu.");
+            }
+        });
+</script>
+
+

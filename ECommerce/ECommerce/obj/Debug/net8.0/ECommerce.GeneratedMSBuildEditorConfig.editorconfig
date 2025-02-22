@@ -1,0 +1,131 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = ECommerce
+build_property.RootNamespace = ECommerce
+build_property.ProjectDir = C:\Users\HpNtb\OneDrive\Masaüstü\YAZLABLAR\Yazlab3\ECommerce\ECommerce\ECommerce\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\HpNtb\OneDrive\Masaüstü\YAZLABLAR\Yazlab3\ECommerce\ECommerce\ECommerce
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Account/Giris.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxHaXJpcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Account/UyeOl.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVeWVPbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Admin/Siparis.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2lwYXJpcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Admin/StokGuncelleme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3Rva0d1bmNlbGxlbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Admin/UrunEkleme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXJ1bkVrbGVtZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Admin/UrunSilme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXJ1blNpbG1lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Erkek/Aksesuar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJrZWtcQWtzZXN1YXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Erkek/Ayakkabı.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJrZWtcQXlha2thYsSxLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Erkek/Giyim.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJrZWtcR2l5aW0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Kadın/Aksesuar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FkxLFuXEFrc2VzdWFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Kadın/Ayakkabı.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FkxLFuXEF5YWtrYWLEsS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Kadın/Giyim.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FkxLFuXEdpeWltLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Profil/KullanıcıProfili.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsXEt1bGxhbsSxY8SxUHJvZmlsaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Sepet/Sepet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwZXRcU2VwZXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Çocuk/Aksesuar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncw4dvY3VrXEFrc2VzdWFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Çocuk/Ayakkabı.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncw4dvY3VrXEF5YWtrYWLEsS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Çocuk/Giyim.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncw4dvY3VrXEdpeWltLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HpNtb/OneDrive/Masaüstü/YAZLABLAR/Yazlab3/ECommerce/ECommerce/ECommerce/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-yy7bhk8ry9

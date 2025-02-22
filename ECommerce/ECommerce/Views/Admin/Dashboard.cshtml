@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Admin Ana Sayfa";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin İşlem Paneli</h2>
+    <div class="row g-4 justify-content-center">
+
+        <!-- Ürün Ekle -->
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-plus-circle text-success" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-2">Ürün Ekle</h5>
+                    <a href="/Admin/UrunEkleme" class="btn btn-success mt-2">Git</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stok Güncelle -->
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-box-seam text-primary" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-2">Stok Güncelle</h5>
+                    <a href="/Admin/StokGuncelleme" class="btn btn-primary mt-2">Git</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ürün Sil -->
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-trash text-danger" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-2">Ürün Sil</h5>
+                    <a href="/Admin/UrunSilme" class="btn btn-danger mt-2">Git</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sipariş Görüntüle -->
+        <div class="col-md-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <i class="bi bi-cart-check text-info" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-2">Sipariş Görüntüle</h5>
+                    <a href="/Admin/Siparis" class="btn btn-info mt-2">Git</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

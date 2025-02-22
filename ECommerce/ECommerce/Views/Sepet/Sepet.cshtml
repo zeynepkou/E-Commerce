@@ -1,0 +1,79 @@
+﻿@model Tuple<List<ECommerce.Models.Cart>, List<ECommerce.Models.Log>>
+
+@{
+    ViewData["Title"] = "Sepetim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center mb-4">Sepetim (@Model.Item1.Count Ürün)</h2>
+
+<div class="container px-5 mb-5">
+    <div class="row">
+        <!-- Sol Tarafta Sepet Ürünleri -->
+        <div class="col-md-8">
+            @foreach (var item in Model.Item1)
+            {
+                <div class="card mb-3 shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <img src="@item.Product.ImageUrl" class="img-fluid rounded" alt="@item.Product.ProductName">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Product.ProductName</h5>
+                                <p class="text-danger fw-bold">@string.Format("{0:C}", item.Product.Price)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <div class="d-flex ms-3">
+                                <a href="@Url.Action("UpdateQuantity", "Sepet", new { cartId = item.CartID, quantity = item.Quantity - 1 })" class="btn btn-sm btn-outline-secondary me-2">-</a>
+                                <span class="mx-2 fw-bold">@item.Quantity</span>
+                                <a href="@Url.Action("UpdateQuantity", "Sepet", new { cartId = item.CartID, quantity = item.Quantity + 1 })" class="btn btn-sm btn-outline-secondary me-3">+</a>
+                                <a href="@Url.Action("Remove", "Sepet", new { cartId = item.CartID })" class="btn btn-sm btn-outline-danger">Sil</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sağ Tarafta Toplam Tutar ve Onayla Butonu -->
+        <div class="col-md-4">
+            <div class="card p-4 shadow-sm">
+                <h4 class="mb-3 text-center fw-bold text-dark">Ödenecek Tutar</h4>
+                <h2 class="fw-bold text-success text-center">
+                    @string.Format("{0:C}", Model.Item1.Sum(c => c.Quantity * c.Product.Price))
+                </h2>
+                <div class="text-center mt-4">
+                    <form method="post" action="@Url.Action("SatisIslemi", "Sepet")">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Siparişi Onayla</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loglar -->
+    <div class="mt-5">
+        <h4 class="text-dark">Son Loglar</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Zaman</th>
+                    <th>Tip</th>
+                    <th>Mesaj</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model.Item2)
+                {
+                    <tr>
+                        <td>@log.LogTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@log.LogType</td>
+                        <td>@log.LogMessage</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

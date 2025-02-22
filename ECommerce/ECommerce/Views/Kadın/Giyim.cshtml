@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ECommerce.Models.Product>
+
+@{
+    ViewData["Title"] = "Kadın Giyim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center mb-4">Kadın Giyim Ürünleri</h1>
+<div class="container px-5">
+    <!-- Sağ ve sol boşluklar için px-5 eklendi -->
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var product in Model)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100" style="height: 650px;">
+                        <div style="height: 400px; overflow: hidden;">
+                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 100%; width: 100%; object-fit: cover; object-position: top;" />
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text">@product.Description</p>
+                            </div>
+                            <div>
+                                <p><strong>Fiyat:</strong> @String.Format("{0:C}", product.Price)</p>
+                                <p><strong>Stok:</strong> @product.Stock</p>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="@Url.Action("AddToCart", "Sepet", new { productId = product.ProductID })" class="btn btn-primary">Sepete Ekle</a>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-center">Ürün bulunamadı.</p>
+        }
+    </div>
+</div>

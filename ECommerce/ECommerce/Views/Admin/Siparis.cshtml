@@ -1,0 +1,482 @@
+﻿
+@{
+    ViewBag.Title = "Siparişler";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+<h2 class="page-title">Siparişler</h2>
+
+<div class="table-container">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Sipariş ID</th>
+                <th>Müşteri Adı</th>
+                <th>Ürün Adı</th>
+                <th>Adet</th>
+                <th>Durum</th>
+                <th>Bekleme Süresi</th>
+                <th>Öncelik Skoru</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                var statusClass = order.Status == "Pending" ? "pending" : ""; // Başlangıç durumu
+                var statusText = order.Status == "Pending" ? "Bekleniyor" : order.Status; // Görünen metin
+                var waitingTime = DateTime.Now - order.OrderDate;
+                <tr id="order-@order.OrderID" data-order-date="@order.OrderDate.ToString("yyyy-MM-ddTHH:mm:ss")">
+                    <td>@order.OrderID</td>
+                    <td>@order.Customer.CustomerName @order.Customer.CustomerSurName</td>
+                    <td>@order.Product.ProductName</td>
+                    <td>@order.Quantity</td>
+                    <td class="status @statusClass" data-status="@order.Status">@statusText</td>
+                    <td>@waitingTime.Hours saat, @waitingTime.Minutes dakika, @waitingTime.Seconds saniye</td>
+                    <td class="priority-score">@order.PriorityScore</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Loglar -->
+<div class="mt-5">
+    <h4 class="text-dark">Son Loglar</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Zaman</th>
+                <th>Tip</th>
+                <th>Mesaj</th>
+            </tr>
+        </thead>
+        <tbody id="logContainer">
+            @foreach (var log in ViewBag.Logs)
+            {
+                <tr>
+                    <td>@log.LogTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@log.LogType</td>
+                    <td>@log.LogMessage</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Tüm Logları Sil Butonu -->
+<div style="text-align: center; margin-top: 10px;">
+    <button id="clearLogsButton" class="delete-btn">Tüm Logları Sil</button>
+</div>
+
+
+<!-- Siparişleri Onayla Formu -->
+<form asp-action="OnaylaSiparisleri" method="post" class="approve-form">
+    <button type="submit" class="btn-primary">Tüm Siparişleri Onayla</button>
+</form>
+
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/orderHub")
+        .build();
+
+    connection.start()
+        .then(() => console.log("SignalR bağlantısı kuruldu."))
+        .catch(err => console.error("SignalR bağlantı hatası: ", err));
+
+    // Sipariş durumu güncelleme
+    connection.on("OrderStatus", (orderId, status) => {
+        const row = document.querySelector(`#order-${orderId}`);
+        if (row) {
+            const statusCell = row.querySelector(".status");
+            statusCell.textContent = status;
+
+            // Animasyon ve renkler
+            if (status === "Pending") {
+                statusCell.className = "status pending";
+                statusCell.textContent = "Bekleniyor";
+            } else if (status === "Processing") {
+                statusCell.className = "status processing";
+                statusCell.innerHTML = "İşleniyor <span class='dots'>...</span>";
+            } else if (status === "Approved") {
+                statusCell.className = "status approved";
+                statusCell.textContent = "Tamamlandı";
+                setTimeout(() => {
+                    row.remove(); // Siparişi ekrandan kaldır
+                }, 3000); // 3 saniye bekle ve sil
+            } else if (status === "Rejected") {
+                statusCell.className = "status rejected";
+                statusCell.textContent = "Reddedildi";
+                setTimeout(() => {
+                    row.remove(); // Siparişi ekrandan kaldır
+                }, 3000); // 3 saniye bekle ve sil
+            }
+        }
+    });
+
+    // Öncelik skoru güncellemesi
+    connection.on("PriorityScoreUpdate", (orderId, priorityScore) => {
+        const row = document.querySelector(`#order-${orderId}`);
+        if (row) {
+            const scoreCell = row.querySelector(".priority-score");
+            scoreCell.textContent = priorityScore.toFixed(2);
+        }
+    });
+
+        // SignalR ile log güncellemesi
+        // SignalR ile log güncellemesi
+    connection.on("LogUpdate", (message) => {
+        const logArea = document.querySelector("#logArea");
+
+        // Log mesajı oluştur
+        const logMessage = document.createElement("div");
+        logMessage.classList.add("log-entry");
+
+        // Mesaj içeriği
+        const messageContent = document.createElement("p");
+        messageContent.textContent = message;
+
+        logMessage.appendChild(messageContent);
+        logArea.appendChild(logMessage);
+
+        // Log kısmına yeni eklenen mesajı en alta kaydır
+        logArea.scrollTop = logArea.scrollHeight;
+    });
+
+        document.getElementById("clearLogsButton").addEventListener("click", () => {
+        fetch("/Admin/ClearLogs", { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const logArea = document.querySelector("#logArea");
+                    logArea.innerHTML = ""; // Frontend'deki logları temizle
+                }
+            });
+    });
+ 
+    
+
+</script>
+
+<script>
+    setInterval(function () {
+        fetch('/Admin/GetLogs')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);  // API yanıtını konsola yazdırmak
+                const tableBody = document.querySelector("#logContainer");
+                if (tableBody) {
+                    // Tabloyu temizle
+                    tableBody.innerHTML = '';
+
+                    // Yeni log verilerini tabloya ekle
+                    data.forEach(log => {
+                        const row = `<tr>
+                                    <td>${log.logTime || 'N/A'}</td>
+                                <td>${log.logType || 'No message available'}</td>
+                                    <td>${log.logMessage || 'No date available'}</td>
+                            </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                } else {
+                    console.error('Log table body element not found.');
+                }
+            })
+            .catch(error => console.error('Error fetching logs:', error));
+    }, 1000); // Refresh every 1 second (1000ms)
+</script>
+
+
+<script>
+
+    connection.on("UpdateOrderList", (updatedOrders) => {
+        const tableBody = document.querySelector(".styled-table tbody");
+
+        updatedOrders.forEach(order => {
+            let row = document.querySelector(`#order-${order.orderID}`);
+
+            if (!row) {
+                // Satır yoksa yeni bir satır oluştur
+                row = document.createElement("tr");
+                row.id = `order-${order.orderID}`;
+                row.innerHTML = `
+                        <td>${order.orderID}</td>
+                        <td>${order.customerName}</td>
+                        <td>${order.productName}</td>
+                        <td>${order.quantity}</td>
+                        <td class="status" data-status="${order.status}"></td>
+                        <td class="priority-score">${order.priorityScore.toFixed(2)}</td>
+                    `;
+                tableBody.appendChild(row);
+            }
+
+            // Mevcut satırı güncelle
+            const statusCell = row.querySelector(".status");
+            const currentStatus = statusCell.dataset.status;
+
+            if (currentStatus !== order.status) {
+                statusCell.dataset.status = order.status;
+                const statusClass = order.status === "Pending" ? "pending" :
+                    order.status === "Processing" ? "processing" :
+                        order.status === "Approved" ? "approved" :
+                            order.status === "Rejected" ? "rejected" : "";
+
+                statusCell.className = `status ${statusClass}`;
+                statusCell.innerHTML = order.status === "Processing"
+                    ? "İşleniyor <span class='dots'>...</span>"
+                    : order.status === "Pending"
+                        ? "Bekleniyor"
+                        : order.status === "Approved"
+                            ? "Tamamlandı"
+                            : order.status === "Rejected"
+                                ? "Reddedildi"
+                                : order.status;
+
+                // "Approved" veya "Rejected" durumlarında 3 saniye beklet ve satırı kaldır
+                if (order.status === "Approved" || order.status === "Rejected") {
+                    setTimeout(() => {
+                        row.remove();
+                    }, 3000); // 3 saniye bekle
+                }
+            }
+
+            // Öncelik skorunu güncelle
+            const scoreCell = row.querySelector(".priority-score");
+            if (scoreCell.textContent !== order.priorityScore.toFixed(2)) {
+                scoreCell.textContent = order.priorityScore.toFixed(2);
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+    // Sunucudan dinamik güncellemeyi başlat
+    fetch("/Admin/StartPriorityScoreUpdate")
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Öncelik skoru güncellemesi başlatıldı.");
+            }
+        });
+</script>
+
+
+
+<script>
+    // Bekleme süresi güncelleme fonksiyonu
+    setInterval(function () {
+        const rows = document.querySelectorAll(".styled-table tbody tr");
+        rows.forEach(row => {
+            const statusCell = row.querySelector(".status");
+            if (!statusCell || statusCell.dataset.status === "Approved" || statusCell.dataset.status === "Rejected") {
+                return; // "Tamamlandı" veya "Reddedildi" durumundaki siparişleri atla
+            }
+
+            const orderDate = new Date(row.dataset.orderDate); // Sipariş tarihi dataset olarak saklanmalı
+            const now = new Date();
+            const diff = new Date(now - orderDate);
+
+            const hours = diff.getUTCHours();
+            const minutes = diff.getUTCMinutes();
+            const seconds = diff.getUTCSeconds();
+
+            const waitingCell = row.querySelector("td:nth-child(6)");
+            if (waitingCell) {
+                waitingCell.textContent = `${hours} saat, ${minutes} dakika, ${seconds} saniye`;
+            }
+        });
+    }, 1000); // Her 1 saniyede bir çalıştır
+</script>
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        color: #8F79BA;
+    }
+
+    .table-container {
+        margin: auto;
+        max-width: 90%;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+        .styled-table thead {
+            background-color: #8F79BA;
+            color: white;
+        }
+
+        .styled-table th, .styled-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .styled-table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        .styled-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .log-container {
+        margin-top: 20px;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        max-width: 90%;
+        margin: 20px auto;
+    }
+
+    .approve-form {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: white;
+        background-color: #8F79BA;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #8F79BA;
+        }
+
+    .status {
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: center;
+        color: white;
+    }
+
+        .status.pending {
+            background-color: yellow;
+            color: black;
+        }
+
+        .status.processing {
+            background-color: orange;
+            animation: pulse 1s infinite;
+        }
+
+        .status.approved {
+            background-color: lightgreen;
+            color: green;
+        }
+
+        .status.rejected {
+            background-color: lightcoral;
+            color: darkred;
+        }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .dots::after {
+        content: " ";
+        animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @@keyframes dots {
+        0% {
+            content: "";
+        }
+
+        25% {
+            content: ".";
+        }
+
+        50% {
+            content: "..";
+        }
+
+        75% {
+            content: "...";
+        }
+    }
+
+
+    .delete-btn {
+        background-color: #d9534f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+
+        .delete-btn:hover {
+            background-color: #c9302c;
+        }
+
+    .log-container {
+        margin-top: 20px;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        max-width: 90%;
+        margin: 20px auto;
+        overflow-y: auto; /* Kaydırma çubuğu */
+        max-height: 300px; /* Maksimum yükseklik */
+    }
+
+    .log-entry {
+        padding: 5px 10px;
+        border-bottom: 1px solid #ddd;
+    }
+</style>

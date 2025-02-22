@@ -1,0 +1,67 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Giriş Yap</h2>
+
+    <!-- Giriş Türü Seçimi -->
+    <div class="text-center mb-4">
+        <button id="btnCustomer" class="btn btn-outline-primary active">Müşteri Girişi</button>
+        <button id="btnAdmin" class="btn btn-outline-secondary">Admin Girişi</button>
+    </div>
+
+    <!-- Müşteri Girişi Formu -->
+    <form id="customerLoginForm" asp-action="Login" asp-controller="Account" method="post" class="w-50 mx-auto mt-4">
+        <div class="mb-3">
+            <label for="email" class="form-label">E-Posta Adresi / Telefon Numarası</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="E-Posta veya Telefon">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Şifre</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Şifre">
+        </div>
+        <div class="mb-3 text-end">
+            <a href="#" class="text-muted">Şifremi Unuttum</a>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+    </form>
+
+    <!-- Admin Girişi Formu -->
+    <form id="adminLoginForm" asp-action="AdminLogin" asp-controller="Account" method="post" class="w-50 mx-auto mt-4" style="display: none;">
+        <div class="mb-3">
+            <label for="adminEmail" class="form-label">Admin E-Posta</label>
+            <input type="text" class="form-control" id="adminEmail" name="email" placeholder="Admin E-Posta">
+        </div>
+        <div class="mb-3">
+            <label for="adminPassword" class="form-label">Şifre</label>
+            <input type="password" class="form-control" id="adminPassword" name="password" placeholder="Şifre">
+        </div>
+        <button type="submit" class="btn btn-secondary w-100">Admin Girişi</button>
+    </form>
+
+    <!-- Hata Mesajı -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+    }
+</div>
+
+<!-- JavaScript ile Form Değişimi -->
+<script>
+    document.getElementById("btnCustomer").addEventListener("click", function () {
+        document.getElementById("customerLoginForm").style.display = "block";
+        document.getElementById("adminLoginForm").style.display = "none";
+
+        this.classList.add("active");
+        document.getElementById("btnAdmin").classList.remove("active");
+    });
+
+    document.getElementById("btnAdmin").addEventListener("click", function () {
+        document.getElementById("customerLoginForm").style.display = "none";
+        document.getElementById("adminLoginForm").style.display = "block";
+
+        this.classList.add("active");
+        document.getElementById("btnCustomer").classList.remove("active");
+    });
+</script>

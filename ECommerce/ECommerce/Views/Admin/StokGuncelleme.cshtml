@@ -1,0 +1,229 @@
+﻿@{
+    ViewData["Title"] = "Stok Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    var products = ViewBag.Products as List<ECommerce.Models.Product>;
+    var productNames = products?.Select(p => p.ProductName).ToList() ?? new List<string>();
+    var stockData = products?.Select(p => p.Stock).ToList() ?? new List<int>();
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Stok Güncelleme ve Durumu</h2>
+
+    <!-- Stok Durumu Tablosu -->
+    <div class="card shadow mb-5">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Mevcut Stok Durumu</h4>
+        </div>
+        <div class="card-body">
+            <!-- Tablo için kaydırma kapsayıcısı -->
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th>Stok Miktarı</th>
+                            <th>Fiyat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in products)
+                        {
+                            <tr class="@(product.Stock < 30 ? "table-danger" : "table-success")">
+                                <td>@product.ProductName</td>
+                                <td>@product.Stock</td>
+                                <td>@string.Format("{0:C}", product.Price)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Not yazısı -->
+            <p class="text-muted mt-3"><strong>Not:</strong> Stok miktarı 30'un altındaki ürünler kırmızı renkle belirtilmiştir.</p>
+        </div>
+    </div>
+
+    <!-- Grafikler -->
+    <!-- Grafikler -->
+    <div class="card shadow mb-5">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Stok Durumu Grafikleri</h4>
+        </div>
+        <div class="card-body">
+            <!-- Bar Chart -->
+            <div class="mb-5">
+                <canvas id="barChart" style="max-width: 100%;"></canvas>
+            </div>
+            <!-- Pie Chart -->
+            <!-- Pie Chart -->
+            <div class="d-flex justify-content-center align-items-center" style="height: 800px;">
+                <canvas id="pieChart" style="max-width: 100%;"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Stok Güncelleme Formu -->
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Stok Güncelle</h4>
+        </div>
+        <div class="card-body">
+            <form action="/Admin/StokGuncelle" method="post">
+                <div class="mb-3">
+                    <label for="productId" class="form-label">Ürün Seç</label>
+                    <select class="form-control" id="productId" name="productId" required>
+                        <option value="">Ürün Seçin</option>
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.ProductID">@product.ProductName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="newStock" class="form-label">Yeni Stok Miktarı</label>
+                    <input type="number" class="form-control" id="newStock" name="newStock" min="0" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Stok Güncelle</button>
+            </form>
+        </div>
+    </div>
+    <!-- Loglar -->
+    <div class="mt-5">
+        <h4 class="text-dark">Son Loglar</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Zaman</th>
+                    <th>Tip</th>
+                    <th>Mesaj</th>
+                </tr>
+            </thead>
+            <tbody id="logContainer">
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.LogTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@log.LogType</td>
+                        <td>@log.LogMessage</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+   
+    // Stok ve Ürün Adı Verileri
+    var productNames = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(productNames));
+    var stockData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(stockData));
+
+    // Bar Chart
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: productNames,
+            datasets: [{
+                label: 'Stok Miktarı',
+                data: stockData,
+                backgroundColor: stockData.map(value => value < 30 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(54, 162, 235, 0.7)'),
+                borderColor: stockData.map(value => value < 30 ? 'rgba(255, 99, 132, 0.7)' : 'rgba(54, 162, 235, 0.7)'),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+        // Pie Chart
+    var ctxPie = document.getElementById('pieChart').getContext('2d');
+
+    // Otomatik renk üretme fonksiyonu
+    function generateColors(data) {
+        return data.map(value => value < 30 ? 'rgba(255, 99, 132, 0.7)' : `hsl(${Math.random() * 360}, 70%, 60%)`);
+    }
+
+    new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: productNames,
+            datasets: [{
+                label: 'Stok Dağılımı',
+                data: stockData,
+                backgroundColor: generateColors(stockData),
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+
+ 
+</script>
+
+<script>
+    // Sayfa yüklendiğinde logları almak için
+    $(document).ready(function () {
+        // İlk başta logları al
+        getLogs();
+
+        // Loglar ve Stok Verisi Güncelleme
+        setInterval(function () {
+            getLogs();  // 5 saniyede bir logları yenile
+            window.location.reload();  // Sayfayı tamamen yenileyin
+        }, 5000); // 5 saniyede bir sayfayı yenileyin
+    });
+
+    // Logları almak ve tabloya eklemek için fonksiyon
+    function getLogs() {
+        $.ajax({
+            url: '/Admin/GetLogs',  // Controller'da bu endpoint'e yönlendirecek
+            type: 'GET',
+            success: function (logs) {
+                let logContainer = $('#logContainer');
+                logContainer.empty(); // Eski logları temizle
+
+                if (logs.length > 0) {
+                    logs.forEach(log => {
+                        // Logları tabloya ekleyin
+                        logContainer.append(`
+                                <tr>
+                                    <td>${log.logTime}</td>
+                                    <td>${log.logType}</td>
+                                    <td>${log.logMessage}</td>
+                                </tr>
+                            `);
+                    });
+                } else {
+                    logContainer.append('<tr><td colspan="3">Yeni log bulunamadı.</td></tr>');
+                }
+            },
+            error: function () {
+                console.error("Loglar alınırken bir hata oluştu.");
+            }
+        });
+    }
+</script>
+

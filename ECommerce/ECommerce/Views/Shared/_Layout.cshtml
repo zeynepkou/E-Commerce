@@ -1,0 +1,374 @@
+﻿@{
+    var categories = ViewBag.Categories as List<ECommerce.Models.Category>;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZ - E Ticaret</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <style>
+        /* Navbar Stil */
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #005378 !important;
+            margin-left: 40px; /* EZ'yi sağa kaydır */
+        }
+
+        .nav-link {
+            color: #333;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #005378 !important;
+            }
+
+        /* Dropdown Hover */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Navbar İkonları için Yeni Stil */
+        .navbar-icons {
+            margin-left: -9px; /* Simgeleri sola kaydır */
+        }
+
+            .navbar-icons a {
+                margin-right: 20px; /* Simgeler arasında boşluk */
+                position: relative; /* Sepet üzerindeki badge düzgün görünmesi için */
+            }
+
+            .navbar-icons .badge {
+                font-size: 0.75rem;
+                padding: 0.3em 0.6em;
+                top: -8px; /* Sayının konumunu biraz yukarı taşı */
+                right: -12px; /* Sayıyı sağa doğru kaydır */
+                transform: translate(0, 0);
+                position: absolute;
+            }
+
+        /* Navbar İkonları */
+        .navbar-icons i {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+            .navbar-icons i:hover {
+                color: #003366;
+            }
+
+        /* Dropdown Menüsünü Kişi İkonunun Altına Hizala */
+        .navbar-icons .dropdown-menu {
+            top: 100%; /* Menü ikonun hemen altına başlasın */
+            left: auto; /* Sağ-sol hizalamayı kontrol et */
+            right: 0; /* Menü sağa taşmasın */
+            z-index: 1050; /* Diğer elementlerin üstünde kalması için */
+        }
+
+
+        /* Arama Çubuğu */
+        .search-bar {
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            width: 250px;
+            font-size: 1rem;
+        }
+
+            .search-bar:focus {
+                border-bottom-color: #005378;
+            }
+
+        /* Banner Bölgesi */
+        .banner {
+            background: url('https://via.placeholder.com/1920x500') no-repeat center center;
+            background-size: cover;
+            height: 500px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+            .banner h1 {
+                font-size: 3rem;
+                font-weight: bold;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            }
+
+        /* Footer Bölgesi */
+        footer {
+            background-color: #f8f9fa;
+            padding: 1rem 0;
+        }
+
+            footer a {
+                color: #333;
+                margin: 0 10px;
+                font-size: 1.2rem;
+                transition: color 0.3s;
+            }
+
+                footer a:hover {
+                    color: #005378;
+                }
+
+        .footer-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .carousel-inner img {
+            height: 500px; /* Carousel yüksekliği */
+            object-fit: cover; /* Resimleri ekranı kaplayacak şekilde orantılı ayarla */
+            border-radius: 10px; /* Köşeleri yuvarlat */
+        }
+
+        /* Dropdown Menü Stil */
+        .dropdown-menu {
+            min-width: 150px;
+            text-align: center;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Hafif gölge ekleme */
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .dropdown-item:hover {
+                background-color: transparent; /* Arka plan değişmesin */
+                color: #005378; /* Yazı rengi mavi */
+            }
+
+        .dropdown-menu {
+            text-align: left; /* İçerikleri sola hizalar */
+        }
+
+
+        /* Dropdown oklarını kaldır */
+        .nav-link.dropdown-toggle::after {
+            display: none;
+        }
+
+        /* Sağ ve sol boşlukları sıfırlamak için */
+        .container, .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 0;
+            margin-right: 0;
+            max-width: 100%; /* Sayfanın tam genişliğini kullan */
+        }
+
+        /* Bildirim Mesajı Stil Ayarları */
+        .notification-center {
+            position: fixed;
+            top: 20px; /* Sayfanın üst ortasında */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1050;
+            background-color: #f8f9fa; /* Gri arka plan */
+            color: #333; /* Yazı rengi */
+            padding: 1.5rem 3rem; /* Daha geniş padding */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Daha belirgin gölge */
+            font-size: 1.5rem; /* Yazı boyutunu büyüt */
+            font-weight: bold; /* Yazı kalınlığı */
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="#">EZ</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <!-- Anasayfa Linki -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/Index">Anasayfa</a>
+                    </li>
+
+                    @if (categories != null)
+                    {
+                        @foreach (var mainCategory in categories.Where(c => c.ParentCategoryID == null))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_@mainCategory.CategoryID" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @mainCategory.CategoryName
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown_@mainCategory.CategoryID">
+                                    @foreach (var subCategory in categories.Where(c => c.ParentCategoryID == mainCategory.CategoryID))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" href="/Category/Show?mainCategory=@mainCategory.CategoryName&subCategory=@subCategory.CategoryName">
+                                                @subCategory.CategoryName
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+
+                </ul>
+
+                <!-- Navbar Simgeleri -->
+                <div class="navbar-icons d-flex align-items-center">
+                    <a href="#"><i class="bi bi-search"></i></a>
+                    <input type="text" class="search-bar me-2" placeholder="Arama Yap" />
+                    <a href="#"><i class="bi bi-heart"></i></a>
+                    <!-- Navbar Kişi İkonu -->
+                    <div class="dropdown navbar-icons d-flex align-items-center">
+                        <a href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            @if (Context.Session.GetString("UserName") != null)
+                            {
+                                <li><span class="dropdown-item text-muted">Hoşgeldin, @Context.Session.GetString("UserName")</span></li>
+                                <li><a class="dropdown-item text-primary" href="/Profil/KullanıcıProfili">Profil</a></li>
+                                <li><a class="dropdown-item text-danger" href="/Account/Logout">Çıkış Yap</a></li>
+                            }
+
+                            else
+                            {
+                                <li><a class="dropdown-item" href="/Account/Login">Giriş Yap</a></li>
+                                <li><a class="dropdown-item" href="/Account/Register">Üye Ol</a></li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Sepet İkonu ve Adet -->
+                    <a href="@Url.Action("Sepet", "Sepet")" class="position-relative">
+                        <i class="bi bi-cart"></i>
+                        @if (Context.Session.GetInt32("CartCount") != null)
+                        {
+                            <span class="badge rounded-pill bg-danger">
+                                @Context.Session.GetInt32("CartCount")
+                            </span>
+                        }
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+    </nav>
+
+
+    
+    <!-- Bildirim Mesajı -->
+    @if (TempData["Message"] != null)
+    {
+        <div id="notification" class="notification-center text-center">
+            @TempData["Message"]
+        </div>
+    }
+
+
+
+
+    <!-- Ana Sayfa İçeriği -->
+    <div class="container my-0">
+        @RenderBody() <!-- Sayfa içeriği burada gösterilecek -->
+    </div>
+
+    
+    <!-- Footer -->
+    <!-- Footer -->
+    <footer class="pt-5" style="background-color:#005378; color: #fff;">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <!-- Yardım Bölümü -->
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-white">YARDIM</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Sipariş Sorgulama</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">İade ve Değişim</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Beden Tablosu</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">İşlem Rehberi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kurumsal Bilgiler -->
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-white">KURUMSAL BİLGİLER</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Hakkımızda</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Sürdürülebilirlik</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Kariyer</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">İletişim</a></li>
+                    </ul>
+                </div>
+
+                <!-- İletişim Bilgileri -->
+                <div class="col-md-3 mb-3">
+                    <h5 class="fw-bold text-white">İLETİŞİM</h5>
+                    <p class="mb-1">
+                        <i class="bi bi-whatsapp me-1"></i> WhatsApp Destek
+                    </p>
+                    <p class="mb-1">
+                        <i class="bi bi-telephone me-1"></i> 0850 123 45 67
+                    </p>
+                    <p class="mb-1">
+                        <i class="bi bi-clock me-1"></i> Çalışma Saatleri: 08:00 - 00:00
+                    </p>
+                    <p>
+                        <i class="bi bi-envelope me-1"></i> bilgi@ez.com
+                    </p>
+                </div>
+            </div>
+
+            <hr class="border-white">
+            <!-- Sosyal Medya İkonları -->
+            <div class="mb-3">
+                <a href="#" class="text-white mx-2"><i class="bi bi-instagram fs-4"></i></a>
+                <a href="#" class="text-white mx-2"><i class="bi bi-facebook fs-4"></i></a>
+                <a href="#" class="text-white mx-2"><i class="bi bi-whatsapp fs-4"></i></a>
+                <a href="#" class="text-white mx-2"><i class="bi bi-youtube fs-4"></i></a>
+            </div>
+
+            <!-- Telif Hakkı -->
+            <p class="text-white">&copy; 2024 EZ. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+<script>
+    window.onload = function () {
+        var notification = document.getElementById("notification");
+        if (notification) {
+            setTimeout(function () {
+                notification.style.display = "none";
+            }, 3000); // 3 saniye sonra kapanır
+        }
+    };
+</script>
